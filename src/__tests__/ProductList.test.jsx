@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import ProductList from '../components/ProductList';
 
 // Mock fetch
@@ -38,14 +39,22 @@ afterEach(() => {
 
 describe('ProductList', () => {
   it('renders products after fetch', async () => {
-    render(<ProductList />);
+    render(
+      <MemoryRouter>
+        <ProductList />
+      </MemoryRouter>
+    );
     expect(screen.getByText(/Loading Products/)).toBeInTheDocument();
     await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
     expect(screen.getByText('Test Product 2')).toBeInTheDocument();
   });
 
   it('filters products by category', async () => {
-    render(<ProductList />);
+    render(
+      <MemoryRouter>
+        <ProductList />
+      </MemoryRouter>
+    );
     await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
     const select = screen.getByDisplayValue('All Categories');
     fireEvent.change(select, { target: { value: 'cat1' } });
