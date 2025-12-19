@@ -2,48 +2,11 @@ import { BrowserRouter as Router, Routes, Route, useNavigate, Link } from 'react
 import ProductList from './components/ProductList'
 import ProductDetails from './components/ProductDetails'
 import ProductForm from './components/ProductForm'
+import Cart from './components/Cart'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
-function Navigation() {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container">
-        <Link className="navbar-brand fw-bold" to="/">
-          🛍️ FakeStore
-        </Link>
-        <button 
-          className="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/products">Products</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/product/new">
-                <i className="bi bi-plus-circle me-1"></i>Add Product
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/cart">
-                Cart <span className="badge bg-primary">0</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-  );
-}
+import Navigation from './components/Navigation';
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -182,6 +145,7 @@ function App() {
           <Route path="/product/new" element={<ProductForm />} />
           <Route path="/product/:id/edit" element={<ProductForm />} />
           <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
       </div>
     </Router>

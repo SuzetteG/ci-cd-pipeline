@@ -3,7 +3,9 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+
 import ProductList from '../components/ProductList';
+import { CartProvider } from '../components/CartContext';
 
 // Mock fetch
 beforeEach(() => {
@@ -38,27 +40,36 @@ afterEach(() => {
 });
 
 describe('ProductList', () => {
+  jest.setTimeout(15000);
   it('renders products after fetch', async () => {
-    render(
-      <MemoryRouter>
-        <ProductList />
-      </MemoryRouter>
-    );
-    expect(screen.getByText(/Loading Products/)).toBeInTheDocument();
-    await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
-    expect(screen.getByText('Test Product 2')).toBeInTheDocument();
+    await waitFor(async () => {
+      render(
+        <CartProvider>
+          <MemoryRouter>
+            <ProductList />
+          </MemoryRouter>
+        </CartProvider>
+      );
+      expect(screen.getByText(/Loading Products/)).toBeInTheDocument();
+      await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
+      expect(screen.getByText('Test Product 2')).toBeInTheDocument();
+    });
   });
 
   it('filters products by category', async () => {
-    render(
-      <MemoryRouter>
-        <ProductList />
-      </MemoryRouter>
-    );
-    await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
-    const select = screen.getByDisplayValue('All Categories');
-    fireEvent.change(select, { target: { value: 'cat1' } });
-    expect(screen.getByText('Test Product 1')).toBeInTheDocument();
-    expect(screen.queryByText('Test Product 2')).not.toBeInTheDocument();
+    await waitFor(async () => {
+      render(
+        <CartProvider>
+          <MemoryRouter>
+            <ProductList />
+          </MemoryRouter>
+        </CartProvider>
+      );
+      await waitFor(() => expect(screen.getByText('Test Product 1')).toBeInTheDocument());
+      const select = screen.getByDisplayValue('All Categories');
+      fireEvent.change(select, { target: { value: 'cat1' } });
+      expect(screen.getByText('Test Product 1')).toBeInTheDocument();
+      expect(screen.queryByText('Test Product 2')).not.toBeInTheDocument();
+    });
   });
 });

@@ -1,9 +1,13 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from './useCart';
+
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  
+  const { addToCart } = useCart();
+
   const truncateText = (text, maxLength = 100) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
@@ -85,7 +89,7 @@ function ProductCard({ product }) {
               >
                 View Details
               </button>
-              <button className="btn btn-primary flex-fill">
+              <button className="btn btn-primary flex-fill" onClick={() => addToCart(product, 1)}>
                 <i className="bi bi-cart-plus me-1"></i>
                 Add to Cart
               </button>

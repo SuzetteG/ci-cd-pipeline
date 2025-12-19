@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+
 import ProductCard from '../components/ProductCard';
+import { CartProvider } from '../components/CartContext';
 
 describe('ProductCard', () => {
   const product = {
@@ -16,9 +18,11 @@ describe('ProductCard', () => {
 
   it('renders product details', () => {
     render(
-      <MemoryRouter>
-        <ProductCard product={product} />
-      </MemoryRouter>
+      <CartProvider>
+        <MemoryRouter>
+          <ProductCard product={product} />
+        </MemoryRouter>
+      </CartProvider>
     );
     expect(screen.getByText('Test Product')).toBeInTheDocument();
     expect(screen.getByText('Test Category')).toBeInTheDocument();
@@ -28,9 +32,11 @@ describe('ProductCard', () => {
 
   it('navigates to product details on button click', () => {
     render(
-      <MemoryRouter>
-        <ProductCard product={product} />
-      </MemoryRouter>
+      <CartProvider>
+        <MemoryRouter>
+          <ProductCard product={product} />
+        </MemoryRouter>
+      </CartProvider>
     );
     const viewButton = screen.getByText('View Details');
     expect(viewButton).toBeInTheDocument();

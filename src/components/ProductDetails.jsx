@@ -1,5 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useCart } from './useCart';
+
 
 function ProductDetails() {
   const { id } = useParams();
@@ -10,6 +13,7 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [deleting, setDeleting] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -66,8 +70,9 @@ function ProductDetails() {
   };
 
   const handleAddToCart = () => {
-    // Placeholder for cart functionality
-    alert(`Added ${quantity} x "${product.title}" to cart!\n\nTotal: ${formatPrice(product.price * quantity)}`);
+    if (product) {
+      addToCart(product, quantity);
+    }
   };
 
   const formatPrice = (price) => {

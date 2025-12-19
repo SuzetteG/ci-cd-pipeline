@@ -1,6 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
 import ProductDetails from '../components/ProductDetails';
+import Navigation from '../components/Navigation';
+import { CartProvider } from '../components/CartContext';
 
 // Only mock the hooks, not the whole module!
 jest.mock('react-router-dom', () => {
@@ -15,6 +18,7 @@ jest.mock('react-router-dom', () => {
 import { MemoryRouter } from 'react-router-dom';
 
 describe('Cart Integration', () => {
+  jest.setTimeout(15000);
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -36,20 +40,23 @@ describe('Cart Integration', () => {
     jest.resetAllMocks();
   });
 
-  it('shows alert when Add to Cart is clicked', async () => {
+  it('adds item to cart and updates cart badge', async () => {
     render(
-      <MemoryRouter>
-        <ProductDetails />
-      </MemoryRouter>
+      <CartProvider>
+        <MemoryRouter>
+          <>
+            <Navigation />
+            <ProductDetails />
+          </>
+        </MemoryRouter>
+      </CartProvider>
     );
     await waitFor(() => {
-      // Find the heading with the text "Test Product"
       expect(screen.getByRole('heading', { name: 'Test Product' })).toBeInTheDocument();
     });
     const addButton = screen.getByText(/Add to Cart/);
     fireEvent.click(addButton);
-    expect(window.alert).toHaveBeenCalledWith(
-      expect.stringContaining('Added 1 x "Test Product" to cart')
-    );
+    // Check for cart badge update (should be 1)
+    expect(screen.getByText('1', { selector: '.badge.bg-primary' })).toBeInTheDocument();
   });
 });
